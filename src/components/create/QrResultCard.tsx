@@ -25,17 +25,98 @@ export function QrResultCard({
       await navigator.clipboard.writeText(publicUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
-    } catch {
-      // Clipboard API can be unavailable (e.g. non-HTTPS LAN testing);
-      // the URL is shown as plain text below so the user can select it.
-    }
+    } catch {}
   }
 
   function handleDownload() {
-    const canvas = canvasWrapRef.current?.querySelector("canvas");
-    if (!canvas) return;
+    const qrCanvas = canvasWrapRef.current?.querySelector("canvas");
+    if (!qrCanvas) return;
+
+    const scale = 3;
+    const cardWidth = 900;
+    const cardHeight = 1200;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = cardWidth * scale;
+    canvas.height = cardHeight * scale;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    ctx.scale(scale, scale);
+
+    // Card background
+    ctx.fillStyle = "#171717";
+    ctx.fillRect(0, 0, cardWidth, cardHeight);
+
+    // Border
+    ctx.strokeStyle = "#3a3a3a";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(20, 20, cardWidth - 40, cardHeight - 40);
+
+    // ONEID
+    ctx.textAlign = "left";
+    ctx.fillStyle = "#F7F4EF";
+    ctx.font = "700 48px Arial, sans-serif";
+    ctx.fillText("ONEID", 70, 105);
+
+    ctx.fillStyle = "#A6A6A6";
+    ctx.font = "400 24px Arial, sans-serif";
+    ctx.fillText("One identity. Anywhere.", 70, 145);
+
+    // QR
+    const qrSize = 560;
+    const qrX = (cardWidth - qrSize) / 2;
+    const qrY = 230;
+
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(qrX - 28, qrY - 28, qrSize + 56, qrSize + 56);
+    ctx.drawImage(qrCanvas, qrX, qrY, qrSize, qrSize);
+
+    // Name
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#F7F4EF";
+    ctx.font = "700 42px Arial, sans-serif";
+    ctx.fillText(name.trim(), cardWidth / 2, 900);
+
+    // Username
+    ctx.fillStyle = "#C7C7C7";
+    ctx.font = "400 28px Arial, sans-serif";
+    ctx.fillText(`@${username}`, cardWidth / 2, 945);
+
+    // Divider
+    ctx.strokeStyle = "#3a3a3a";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(100, 1000);
+    ctx.lineTo(cardWidth - 100, 1000);
+    ctx.stroke();
+
+    // Scan text
+    ctx.fillStyle = "#A6A6A6";
+    ctx.font = "400 24px Arial, sans-serif";
+    ctx.fillText("Scan to view this ONEID", cardWidth / 2, 1055);
+
+    // URL
+    ctx.fillStyle = "#777777";
+    ctx.font = "400 18px Arial, sans-serif";
+
+    let displayUrl = publicUrl;
+    const maxWidth = cardWidth - 140;
+
+    while (ctx.measureText(displayUrl).width > maxWidth) {
+      displayUrl = displayUrl.slice(0, -4) + "...";
+    }
+
+    ctx.fillText(displayUrl, cardWidth / 2, 1100);
+
+    // Footer
+    ctx.fillStyle = "#F7F4EF";
+    ctx.font = "700 22px Arial, sans-serif";
+    ctx.fillText("ONEID", cardWidth / 2, 1150);
+
     const link = document.createElement("a");
-    link.download = `oneid-${username}-qr.png`;
+    link.download = `oneid-${username}-card.png`;
     link.href = canvas.toDataURL("image/png");
     link.click();
   }
@@ -68,6 +149,7 @@ export function QrResultCard({
           {copied ? <Check size={14} /> : <Copy size={14} />}
           {copied ? "Copied" : "Copy link"}
         </button>
+
         <button
           type="button"
           onClick={handleDownload}
