@@ -45,75 +45,133 @@ export function QrResultCard({
 
     ctx.scale(scale, scale);
 
-    // Card background
-    ctx.fillStyle = "#171717";
+    const gold = "#C7A97A";
+    const ivory = "#F7F4EF";
+    const muted = "#A6A6A6";
+    const dark = "#171717";
+
+    // Background
+    ctx.fillStyle = dark;
     ctx.fillRect(0, 0, cardWidth, cardHeight);
 
-    // Border
-    ctx.strokeStyle = "#3a3a3a";
+    // Outer subtle card
+    ctx.strokeStyle = "#292929";
     ctx.lineWidth = 2;
-    ctx.strokeRect(20, 20, cardWidth - 40, cardHeight - 40);
+    ctx.strokeRect(18, 18, cardWidth - 36, cardHeight - 36);
+
+    // Premium gold border
+    ctx.strokeStyle = gold;
+    ctx.lineWidth = 5;
+    ctx.strokeRect(42, 42, cardWidth - 84, cardHeight - 84);
+
+    // Top ornament
+    ctx.strokeStyle = gold;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(315, 112);
+    ctx.lineTo(455, 112);
+    ctx.moveTo(445, 112);
+    ctx.lineTo(585, 112);
+    ctx.stroke();
+
+    ctx.fillStyle = gold;
+    ctx.font = "700 30px Arial, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("✦", cardWidth / 2, 123);
 
     // ONEID
-    ctx.textAlign = "left";
-    ctx.fillStyle = "#F7F4EF";
-    ctx.font = "700 48px Arial, sans-serif";
-    ctx.fillText("ONEID", 70, 105);
+    ctx.fillStyle = ivory;
+    ctx.font = "700 68px Arial, sans-serif";
+    ctx.fillText("ONEID", cardWidth / 2, 205);
 
-    ctx.fillStyle = "#A6A6A6";
-    ctx.font = "400 24px Arial, sans-serif";
-    ctx.fillText("One identity. Anywhere.", 70, 145);
+    // Gold accent on D
+    const oneidWidth = ctx.measureText("ONEID").width;
+    ctx.fillStyle = gold;
+    ctx.font = "700 68px Arial, sans-serif";
+    ctx.fillText(
+      "D",
+      cardWidth / 2 + oneidWidth / 2 - 22,
+      205
+    );
 
-    // QR
-    const qrSize = 560;
+    // Tagline
+    ctx.fillStyle = muted;
+    ctx.font = "400 28px Arial, sans-serif";
+    ctx.fillText("One identity. Anywhere.", cardWidth / 2, 250);
+
+    // QR frame
+    const qrSize = 500;
     const qrX = (cardWidth - qrSize) / 2;
-    const qrY = 230;
+    const qrY = 315;
+    const framePadding = 30;
 
-    ctx.fillStyle = "#FFFFFF";
-    ctx.fillRect(qrX - 28, qrY - 28, qrSize + 56, qrSize + 56);
+    ctx.fillStyle = ivory;
+    ctx.beginPath();
+    ctx.roundRect(
+      qrX - framePadding,
+      qrY - framePadding,
+      qrSize + framePadding * 2,
+      qrSize + framePadding * 2,
+      32
+    );
+    ctx.fill();
+
+    ctx.strokeStyle = gold;
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.roundRect(
+      qrX - framePadding,
+      qrY - framePadding,
+      qrSize + framePadding * 2,
+      qrSize + framePadding * 2,
+      32
+    );
+    ctx.stroke();
+
     ctx.drawImage(qrCanvas, qrX, qrY, qrSize, qrSize);
 
     // Name
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#F7F4EF";
-    ctx.font = "700 42px Arial, sans-serif";
-    ctx.fillText(name.trim(), cardWidth / 2, 900);
+    ctx.fillStyle = ivory;
+    ctx.font = "700 46px Arial, sans-serif";
+    ctx.fillText(name.trim(), cardWidth / 2, 925);
 
     // Username
-    ctx.fillStyle = "#C7C7C7";
-    ctx.font = "400 28px Arial, sans-serif";
-    ctx.fillText(`@${username}`, cardWidth / 2, 945);
+    ctx.fillStyle = gold;
+    ctx.font = "500 30px Arial, sans-serif";
+    ctx.fillText(`@${username}`, cardWidth / 2, 970);
 
-    // Divider
-    ctx.strokeStyle = "#3a3a3a";
+    // Gold divider
+    ctx.strokeStyle = gold;
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(100, 1000);
-    ctx.lineTo(cardWidth - 100, 1000);
+    ctx.moveTo(190, 1025);
+    ctx.lineTo(430, 1025);
+    ctx.moveTo(470, 1025);
+    ctx.lineTo(710, 1025);
     ctx.stroke();
 
-    // Scan text
-    ctx.fillStyle = "#A6A6A6";
-    ctx.font = "400 24px Arial, sans-serif";
-    ctx.fillText("Scan to view this ONEID", cardWidth / 2, 1055);
+    ctx.fillStyle = gold;
+    ctx.font = "700 22px Arial, sans-serif";
+    ctx.fillText("✦", cardWidth / 2, 1032);
 
-    // URL
-    ctx.fillStyle = "#777777";
-    ctx.font = "400 18px Arial, sans-serif";
-
-    let displayUrl = publicUrl;
-    const maxWidth = cardWidth - 140;
-
-    while (ctx.measureText(displayUrl).width > maxWidth) {
-      displayUrl = displayUrl.slice(0, -4) + "...";
-    }
-
-    ctx.fillText(displayUrl, cardWidth / 2, 1100);
+    // Scan text — NO URL
+    ctx.fillStyle = ivory;
+    ctx.font = "400 28px Arial, sans-serif";
+    ctx.fillText("Scan to view this ONEID", cardWidth / 2, 1090);
 
     // Footer
-    ctx.fillStyle = "#F7F4EF";
-    ctx.font = "700 22px Arial, sans-serif";
-    ctx.fillText("ONEID", cardWidth / 2, 1150);
+    ctx.strokeStyle = gold;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(330, 1140);
+    ctx.lineTo(425, 1140);
+    ctx.moveTo(475, 1140);
+    ctx.lineTo(570, 1140);
+    ctx.stroke();
+
+    ctx.fillStyle = gold;
+    ctx.font = "600 25px Arial, sans-serif";
+    ctx.fillText("O N E I D", cardWidth / 2, 1148);
 
     const link = document.createElement("a");
     link.download = `oneid-${username}-card.png`;
