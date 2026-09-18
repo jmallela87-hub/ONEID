@@ -19,12 +19,7 @@ function SiteHeader() {
   return (
     <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-8 sm:px-8">
       <span className="text-lg font-semibold tracking-tight">ONEID</span>
-      <Link
-        href="/create"
-        className="rounded-pill border border-line px-4 py-2 text-sm text-ink/90 transition-colors hover:border-accent hover:text-accent"
-      >
-        Create my card
-      </Link>
+      <span className="text-sm text-muted">Digital identity</span>
     </header>
   );
 }
@@ -42,14 +37,20 @@ function Hero() {
           Your socials, contact and links — all in one beautiful digital
           card.
         </p>
-        <div className="mt-9 flex items-center gap-5">
+        <div className="mt-9 flex flex-wrap items-center gap-3">
           <Link
             href="/create"
             className="rounded-pill bg-accent px-6 py-3 text-sm font-medium text-bg transition-opacity hover:opacity-90"
           >
             Create my card
           </Link>
-          <span className="text-sm text-muted">No app. No hassle.</span>
+
+          <Link
+            href="/edit"
+            className="rounded-pill border border-line px-6 py-3 text-sm font-medium text-ink transition-colors hover:border-accent hover:text-accent"
+          >
+            Edit my card
+          </Link>
         </div>
       </div>
       <CardStackVisual />

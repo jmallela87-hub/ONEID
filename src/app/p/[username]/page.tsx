@@ -35,7 +35,7 @@ export default async function PublicProfilePage({ params }: PageProps) {
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("*")
+    .select("username,name,bio,photo,mobile,whatsapp,socials")
     .eq("username", username)
     .maybeSingle();
 

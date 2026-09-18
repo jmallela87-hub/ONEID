@@ -8,6 +8,7 @@ interface QrResultCardProps {
   name: string;
   username: string;
   publicUrl: string;
+  editCode: string;
   onBackToEditing: () => void;
 }
 
@@ -15,9 +16,11 @@ export function QrResultCard({
   name,
   username,
   publicUrl,
+  editCode,
   onBackToEditing,
 }: QrResultCardProps) {
   const [copied, setCopied] = useState(false);
+  const [codeCopied, setCodeCopied] = useState(false);
   const canvasWrapRef = useRef<HTMLDivElement>(null);
 
   async function handleCopy() {
@@ -25,6 +28,14 @@ export function QrResultCard({
       await navigator.clipboard.writeText(publicUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
+    } catch {}
+  }
+
+  async function handleCopyCode() {
+    try {
+      await navigator.clipboard.writeText(editCode);
+      setCodeCopied(true);
+      setTimeout(() => setCodeCopied(false), 1800);
     } catch {}
   }
 
@@ -193,6 +204,25 @@ export function QrResultCard({
 
       <p className="mt-5 text-base font-medium">{name}</p>
       <p className="text-sm text-muted">@{username}</p>
+
+      <div className="mt-5 rounded-2xl border border-accent/40 bg-surface p-4 text-left">
+        <p className="text-xs font-medium text-muted">Private Edit Code</p>
+        <p className="mt-2 break-all font-mono text-sm font-semibold tracking-wide text-accent">
+          {editCode}
+        </p>
+        <p className="mt-2 text-[11px] leading-relaxed text-muted">
+          Keep this code private. You need it to edit your ONEID.
+        </p>
+
+        <button
+          type="button"
+          onClick={handleCopyCode}
+          className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-pill border border-line px-4 py-2 text-xs font-medium transition-colors hover:border-accent hover:text-accent"
+        >
+          {codeCopied ? <Check size={14} /> : <Copy size={14} />}
+          {codeCopied ? "Code copied" : "Copy edit code"}
+        </button>
+      </div>
 
       <p className="mt-4 truncate rounded-lg border border-line bg-surface px-3 py-2 text-xs text-muted">
         {publicUrl}

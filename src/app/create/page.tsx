@@ -12,7 +12,6 @@ import { QrResultCard } from "@/components/create/QrResultCard";
 import { normalizePhone, normalizeUsername } from "@/lib/format";
 import type { SocialKey } from "@/lib/social";
 import { isSupabaseConfigured, PROFILE_PHOTOS_BUCKET, supabase } from "@/lib/supabase";
-import type { NewProfile } from "@/types/profile";
 
 type Status = "idle" | "saving" | "success";
 
@@ -29,6 +28,7 @@ export default function CreatePage() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [publicUrl, setPublicUrl] = useState<string | null>(null);
+  const [editCode, setEditCode] = useState<string | null>(null);
 
   const normalizedUsername = normalizeUsername(username);
 
@@ -64,6 +64,7 @@ export default function CreatePage() {
 
     setStatus("saving");
 
+    const generatedEditCode = generateEditCode();
     let photoUrl: string | null = null;
     if (photoFile) {
       const extension = photoFile.name.includes(".")
@@ -95,29 +96,31 @@ export default function CreatePage() {
       Object.entries(socials).filter(([, v]) => (v ?? "").trim().length > 0)
     );
 
-    const payload: NewProfile = {
-      username: normalizedUsername,
-      name: name.trim(),
-      bio: bio.trim() || null,
-      photo: photoUrl,
-      mobile: mobile.trim() ? normalizePhone(mobile) : null,
-      whatsapp: whatsapp.trim() ? normalizePhone(whatsapp) : null,
-      socials: filledSocials,
-    };
-
-    const { error: insertError } = await supabase
-      .from("profiles")
-      .insert(payload);
-
-    if (insertError) {
-      console.error("Profile save failed:", insertError);
-      if (insertError.code === "23505") {
-        setErrorMessage(
-          `"${normalizedUsername}" is already taken — try a different username.`
-        );
-      } else {
-        setErrorMessage(`Couldn't save your ONEID: ${insertError.message}`);
+    const { data: created, error: createError } = await supabase.rpc(
+      "create_oneid_profile",
+      {
+        p_username: normalizedUsername,
+        p_name: name.trim(),
+        p_bio: bio.trim() || null,
+        p_photo: photoUrl,
+        p_mobile: mobile.trim() ? normalizePhone(mobile) : null,
+        p_whatsapp: whatsapp.trim() ? normalizePhone(whatsapp) : null,
+        p_socials: filledSocials,
+        p_edit_code: generatedEditCode,
       }
+    );
+
+    if (createError) {
+      console.error("Profile save failed:", createError);
+      setErrorMessage(`Couldn't save your ONEID: ${createError.message}`);
+      setStatus("idle");
+      return;
+    }
+
+    if (created !== true) {
+      setErrorMessage(
+        `"${normalizedUsername}" is already taken or this ONEID could not be created. Try another username.`
+      );
       setStatus("idle");
       return;
     }
@@ -128,6 +131,7 @@ export default function CreatePage() {
         : window.location.origin;
 
     setPublicUrl(`${baseUrl}/p/${normalizedUsername}`);
+    setEditCode(generatedEditCode);
     setStatus("success");
   }
 
@@ -138,6 +142,7 @@ export default function CreatePage() {
           name={name.trim()}
           username={normalizedUsername}
           publicUrl={publicUrl}
+          editCode={editCode ?? ""}
           onBackToEditing={() => setStatus("idle")}
         />
       </main>
@@ -267,6 +272,19 @@ export default function CreatePage() {
       </div>
     </main>
   );
+}
+
+const EDIT_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+function generateEditCode() {
+  const values = new Uint32Array(8);
+  crypto.getRandomValues(values);
+
+  const parts = Array.from(values, (value) => {
+    return EDIT_CODE_ALPHABET[value % EDIT_CODE_ALPHABET.length];
+  });
+
+  return `ONEID-${parts.slice(0, 4).join("")}-${parts.slice(4).join("")}`;
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
