@@ -122,7 +122,12 @@ export default function CreatePage() {
       return;
     }
 
-    setPublicUrl(`https://idone-five.vercel.app/p/${normalizedUsername}`);
+    const baseUrl =
+      window.location.hostname === "localhost"
+        ? "http://172.31.75.209:3000"
+        : window.location.origin;
+
+    setPublicUrl(`${baseUrl}/p/${normalizedUsername}`);
     setStatus("success");
   }
 
