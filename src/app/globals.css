@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+:root {
+  --oneid-bg: #0a0a0a;
+  --oneid-surface: #121212;
+  --oneid-card: #171717;
+  --oneid-text: #f5f2ea;
+  --oneid-muted: #92908a;
+  --oneid-border: #272727;
+  --oneid-accent: #c5a46d;
+}
+
+@theme inline {
+  --color-bg: var(--oneid-bg);
+  --color-surface: var(--oneid-surface);
+  --color-card: var(--oneid-card);
+  --color-ink: var(--oneid-text);
+  --color-muted: var(--oneid-muted);
+  --color-line: var(--oneid-border);
+  --color-accent: var(--oneid-accent);
+  --font-sans: "Manrope", system-ui, sans-serif;
+
+  --radius-card: 20px;
+  --radius-pill: 999px;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--oneid-bg);
+  color: var(--oneid-text);
+  font-family: "Manrope", system-ui, sans-serif;
+}
+
+::selection {
+  background: var(--oneid-accent);
+  color: var(--oneid-bg);
+}
