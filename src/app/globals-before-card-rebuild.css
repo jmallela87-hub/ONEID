@@ -1,0 +1,942 @@
+@import "tailwindcss";
+
+:root {
+  --oneid-bg: #080808;
+  --oneid-surface: #101010;
+  --oneid-card: #151515;
+  --oneid-text: #f4f0e8;
+  --oneid-muted: #858585;
+  --oneid-border: #292929;
+  --oneid-red: #c93645;
+}
+
+@theme inline {
+  --color-bg: var(--oneid-bg);
+  --color-surface: var(--oneid-surface);
+  --color-card: var(--oneid-card);
+  --color-ink: var(--oneid-text);
+  --color-muted: var(--oneid-muted);
+  --color-line: var(--oneid-border);
+  --color-accent: var(--oneid-red);
+  --font-sans: "Manrope", system-ui, sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --radius-card: 18px;
+  --radius-pill: 999px;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 75% 10%, rgba(255,255,255,.035), transparent 28%),
+    var(--oneid-bg);
+  color: var(--oneid-text);
+  font-family: "Manrope", system-ui, sans-serif;
+}
+
+::selection {
+  background: #f4f0e8;
+  color: #080808;
+}
+
+/* ============================================================
+   ONEID PLAYING CARD
+   ============================================================ */
+
+.pc {
+  position: relative;
+  aspect-ratio: 5 / 7;
+  overflow: hidden;
+  border-radius: 18px;
+  padding: 8px;
+  background: var(--pc-bg);
+  color: var(--pc-fg);
+  box-shadow:
+    0 35px 80px -35px rgba(0,0,0,.9),
+    0 18px 35px -22px rgba(0,0,0,.8),
+    0 0 0 1px rgba(255,255,255,.12);
+}
+
+.pc-inner {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--pc-fg) 34%, transparent);
+  border-radius: 12px;
+  padding: 38px 18px 34px;
+}
+
+.pc-inner::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid color-mix(in srgb, var(--pc-fg) 10%, transparent);
+  border-radius: 9px;
+  pointer-events: none;
+}
+
+.pc-corner {
+  position: absolute;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: .9;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  color: var(--pc-suit);
+}
+
+.pc-corner.tl {
+  top: 12px;
+  left: 13px;
+}
+
+.pc-corner.br {
+  right: 13px;
+  bottom: 12px;
+  transform: rotate(180deg);
+}
+
+.pc-watermark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 70%;
+  height: 70%;
+  transform: translate(-50%, -50%);
+  color: var(--pc-suit);
+  opacity: .035;
+  pointer-events: none;
+}
+
+.pc-ornament {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+  margin: 13px 0;
+  color: var(--pc-fg);
+}
+
+.pc-ornament span {
+  flex: 1;
+  height: 1px;
+  background: color-mix(in srgb, var(--pc-fg) 20%, transparent);
+}
+
+.pc-chip {
+  display: inline-flex;
+  height: 34px;
+  width: 34px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--pc-fg) 25%, transparent);
+  background: color-mix(in srgb, var(--pc-fg) 7%, transparent);
+  transition: .15s ease;
+}
+
+.pc-chip:hover {
+  border-color: var(--pc-suit);
+  transform: translateY(-1px);
+}
+
+.oneid-section {
+  position: relative;
+}
+
+.oneid-section + .oneid-section {
+  margin-top: 2.5rem;
+}
+
+.oneid-panel {
+  border: 1px solid #222;
+  background: rgba(18,18,18,.72);
+  border-radius: 18px;
+  padding: 22px;
+}
+
+.oneid-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #f4f0e8;
+}
+
+.oneid-label::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: #242424;
+}
+
+.oneid-input {
+  width: 100%;
+  border: 1px solid #292929;
+  background: #111;
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: #f4f0e8;
+  outline: none;
+}
+
+.oneid-input:focus {
+  border-color: #666;
+}
+
+.oneid-studio {
+  border: 1px solid #292929;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.045), transparent 42%),
+    #101010;
+  border-radius: 20px;
+  padding: 22px;
+}
+
+.oneid-mini-card {
+  aspect-ratio: 5 / 7;
+  width: 64px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,.16);
+  box-shadow: 0 12px 22px rgba(0,0,0,.35);
+}
+
+@media (max-width: 1023px) {
+  .pc {
+    max-width: 330px;
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .pc {
+    max-width: 285px;
+  }
+
+  .oneid-panel,
+  .oneid-studio {
+    padding: 17px;
+  }
+}
+
+/* ============================================================
+   ONEID — REAL PLAYING CARD MATERIAL SYSTEM
+   UI ONLY — NO DATA / BACKEND CHANGES
+   ============================================================ */
+
+:root {
+  --oneid-card-cream: #f1eee5;
+  --oneid-card-black: #101010;
+  --oneid-card-red: #671c25;
+  --oneid-card-ink: #151515;
+  --oneid-card-red-ink: #b32635;
+}
+
+/* Physical card surface */
+.oneid-playing-card {
+  position: relative;
+  aspect-ratio: 5 / 7;
+  overflow: hidden;
+
+  border-radius: 15px;
+  padding: 10px;
+
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.18) inset,
+    0 -1px 0 rgba(0,0,0,.18) inset,
+    0 22px 45px rgba(0,0,0,.32),
+    0 5px 12px rgba(0,0,0,.22);
+
+  isolation: isolate;
+
+  transform: translateZ(0);
+  backface-visibility: hidden;
+
+  transition:
+    transform .45s cubic-bezier(.22,1,.36,1),
+    box-shadow .45s cubic-bezier(.22,1,.36,1);
+}
+
+/* Actual paper grain */
+.oneid-playing-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+
+  opacity: .065;
+
+  background-image:
+    radial-gradient(circle at 20% 20%, #000 0 .45px, transparent .55px),
+    radial-gradient(circle at 80% 70%, #000 0 .4px, transparent .5px),
+    radial-gradient(circle at 35% 85%, #fff 0 .35px, transparent .5px);
+
+  background-size:
+    5px 5px,
+    7px 7px,
+    9px 9px;
+
+  mix-blend-mode: multiply;
+}
+
+/* Soft physical edge */
+.oneid-playing-card::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+
+  z-index: 4;
+  pointer-events: none;
+
+  border: 1px solid rgba(0,0,0,.16);
+  border-radius: 10px;
+
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.22) inset;
+}
+
+/* Inner real-card border */
+.oneid-card-inner {
+  position: relative;
+  z-index: 6;
+
+  width: 100%;
+  height: 100%;
+
+  border: 1px solid rgba(0,0,0,.18);
+  border-radius: 10px;
+
+  overflow: hidden;
+}
+
+/* Cream stock */
+.oneid-card-cream {
+  color: var(--oneid-card-ink);
+
+  background:
+    linear-gradient(
+      135deg,
+      #f7f4ec 0%,
+      #eee9de 48%,
+      #f4f0e7 100%
+    );
+}
+
+/* Black / midnight stock */
+.oneid-card-black {
+  color: #f3efe7;
+
+  background:
+    linear-gradient(
+      135deg,
+      #161b23 0%,
+      #0d1118 50%,
+      #141923 100%
+    );
+}
+
+/* Traditional red stock */
+.oneid-card-red {
+  color: #f7eee9;
+
+  background:
+    linear-gradient(
+      135deg,
+      #701d27 0%,
+      #4b1219 52%,
+      #671b24 100%
+    );
+}
+
+/* Red suit */
+.oneid-suit-red {
+  color: var(--oneid-card-red-ink);
+}
+
+/* Black suit */
+.oneid-suit-black {
+  color: #171717;
+}
+
+/* Dark card black suit */
+.oneid-card-black .oneid-suit-black {
+  color: #f1eee6;
+}
+
+/* Corner index */
+.oneid-card-index {
+  position: absolute;
+  top: 17px;
+  left: 17px;
+
+  z-index: 10;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  line-height: .82;
+  letter-spacing: -.04em;
+
+  user-select: none;
+}
+
+.oneid-card-index-rank {
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.oneid-card-index-suit {
+  margin-top: 4px;
+  font-size: 18px;
+}
+
+/* Mirrored bottom index */
+.oneid-card-index-bottom {
+  top: auto;
+  left: auto;
+  right: 17px;
+  bottom: 17px;
+
+  transform: rotate(180deg);
+}
+
+/* Huge subtle center suit */
+.oneid-card-center-suit {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: clamp(90px, 13vw, 155px);
+  line-height: 1;
+
+  opacity: .075;
+
+  pointer-events: none;
+}
+
+/* Card content */
+.oneid-card-content {
+  position: relative;
+  z-index: 8;
+
+  display: flex;
+  height: 100%;
+
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 44px 28px;
+
+  text-align: center;
+}
+
+/* Card micro label */
+.oneid-card-label {
+  font-size: 8px;
+  line-height: 1;
+
+  letter-spacing: .42em;
+  text-transform: uppercase;
+
+  opacity: .42;
+}
+
+/* Card title */
+.oneid-card-title {
+  margin-top: 18px;
+
+  max-width: 88%;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: clamp(20px, 2.3vw, 29px);
+  font-weight: 700;
+
+  line-height: 1.03;
+  letter-spacing: -.025em;
+}
+
+/* Physical card hover */
+@media (hover: hover) and (pointer: fine) {
+  .oneid-playing-card:hover {
+    transform:
+      translateY(-10px)
+      rotate(.25deg);
+
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.2) inset,
+      0 -1px 0 rgba(0,0,0,.18) inset,
+      0 34px 65px rgba(0,0,0,.38),
+      0 9px 20px rgba(0,0,0,.24);
+  }
+}
+
+/* Selected card */
+.oneid-playing-card.is-selected {
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.2) inset,
+    0 -1px 0 rgba(0,0,0,.18) inset,
+    0 40px 75px rgba(0,0,0,.46),
+    0 10px 22px rgba(0,0,0,.28);
+}
+
+/* Card stack depth */
+.oneid-card-stack {
+  position: relative;
+  isolation: isolate;
+}
+
+.oneid-card-stack::before,
+.oneid-card-stack::after {
+  content: "";
+  position: absolute;
+
+  inset: 3px;
+
+  border-radius: 15px;
+
+  background: #171717;
+
+  box-shadow:
+    0 18px 35px rgba(0,0,0,.25);
+}
+
+.oneid-card-stack::before {
+  z-index: -2;
+  transform: rotate(-2.2deg) translate(-4px, 4px);
+}
+
+.oneid-card-stack::after {
+  z-index: -1;
+  transform: rotate(1.4deg) translate(4px, 2px);
+}
+
+/* Face card ornament */
+.oneid-face-ornament {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: 58%;
+  aspect-ratio: 1;
+
+  transform: translate(-50%, -50%);
+
+  border: 1px solid currentColor;
+  border-radius: 50%;
+
+  opacity: .13;
+}
+
+.oneid-face-ornament::before,
+.oneid-face-ornament::after {
+  content: "";
+
+  position: absolute;
+  inset: 10%;
+
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.oneid-face-ornament::after {
+  inset: 25%;
+}
+
+/* Joker */
+.oneid-joker {
+  background:
+    linear-gradient(
+      135deg,
+      #15121c,
+      #21172a 48%,
+      #11151c
+    );
+
+  color: #f4efe8;
+}
+
+.oneid-joker .oneid-card-inner {
+  border-color: rgba(255,255,255,.22);
+}
+
+.oneid-joker .oneid-card-center-suit {
+  opacity: .13;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .oneid-playing-card {
+    border-radius: 13px;
+    padding: 8px;
+  }
+
+  .oneid-playing-card::after {
+    inset: 6px;
+    border-radius: 8px;
+  }
+
+  .oneid-card-index {
+    top: 14px;
+    left: 14px;
+  }
+
+  .oneid-card-index-bottom {
+    top: auto;
+    left: auto;
+    right: 14px;
+    bottom: 14px;
+  }
+
+  .oneid-card-content {
+    padding: 38px 20px;
+  }
+
+  .oneid-card-title {
+    font-size: 21px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .oneid-playing-card {
+    transition: none;
+  }
+}
+
+/* ============================================================
+   ONEID — FINAL REALISTIC PLAYING CARD OVERRIDE
+   Applies to existing PlayingCard / CardPreview components
+   ============================================================ */
+
+.pc {
+  position: relative !important;
+  aspect-ratio: 5 / 7 !important;
+  overflow: hidden !important;
+
+  border-radius: 16px !important;
+  padding: 9px !important;
+
+  color: var(--pc-fg) !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--pc-bg) 96%, white 4%),
+      var(--pc-bg) 48%,
+      color-mix(in srgb, var(--pc-bg) 94%, black 6%)
+    ) !important;
+
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.16) inset,
+    0 -1px 0 rgba(0,0,0,.25) inset,
+    0 3px 7px rgba(0,0,0,.28),
+    0 18px 35px rgba(0,0,0,.30),
+    0 38px 70px rgba(0,0,0,.16) !important;
+
+  isolation: isolate !important;
+
+  transition:
+    transform .5s cubic-bezier(.22,1,.36,1),
+    box-shadow .5s cubic-bezier(.22,1,.36,1) !important;
+}
+
+/* Card stock grain */
+.pc::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  z-index: 20;
+  pointer-events: none;
+
+  opacity: .055;
+
+  background-image:
+    radial-gradient(circle, #fff 0 .35px, transparent .5px),
+    radial-gradient(circle, #000 0 .3px, transparent .5px);
+
+  background-size:
+    5px 5px,
+    7px 7px;
+
+  mix-blend-mode: overlay;
+}
+
+/* Physical edge highlight */
+.pc::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+
+  z-index: 19;
+  pointer-events: none;
+
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 12px;
+
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,.18) inset;
+}
+
+/* Inner card face */
+.pc-inner {
+  position: relative !important;
+  z-index: 5 !important;
+
+  width: 100% !important;
+  height: 100% !important;
+
+  overflow: hidden !important;
+
+  border: 1px solid rgba(255,255,255,.18) !important;
+  border-radius: 11px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.025),
+      rgba(0,0,0,.035)
+    ) !important;
+
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,.16) inset,
+    0 1px 0 rgba(255,255,255,.08) inset !important;
+}
+
+/* Corner indices */
+.pc-corner {
+  position: absolute !important;
+  z-index: 30 !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+
+  width: 30px !important;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif !important;
+
+  line-height: .82 !important;
+  letter-spacing: -.04em !important;
+
+  user-select: none;
+}
+
+.pc-corner.tl {
+  top: 16px !important;
+  left: 16px !important;
+}
+
+.pc-corner.br {
+  right: 16px !important;
+  bottom: 16px !important;
+
+  transform: rotate(180deg) !important;
+}
+
+/* Rank */
+.pc-corner > span:first-child {
+  font-size: 24px !important;
+  font-weight: 700 !important;
+}
+
+/* Suit */
+.pc-corner > span:last-child {
+  margin-top: 5px !important;
+  font-size: 17px !important;
+}
+
+/* Center watermark */
+.pc-watermark {
+  position: absolute !important;
+  z-index: 1 !important;
+
+  left: 50% !important;
+  top: 50% !important;
+
+  transform: translate(-50%, -50%) !important;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif !important;
+
+  font-size: clamp(100px, 15vw, 165px) !important;
+
+  opacity: .065 !important;
+
+  pointer-events: none !important;
+}
+
+/* Realistic profile portrait */
+.pc img {
+  filter:
+    contrast(.98)
+    saturate(.94);
+
+  transition:
+    transform .6s cubic-bezier(.22,1,.36,1),
+    filter .6s ease;
+}
+
+.pc:hover img {
+  transform: scale(1.025);
+  filter:
+    contrast(1)
+    saturate(1);
+}
+
+/* Existing ornament */
+.pc-ornament {
+  opacity: .7;
+}
+
+.pc-ornament > span {
+  display: block;
+  width: 42px;
+  height: 1px;
+
+  background: currentColor;
+  opacity: .18;
+}
+
+/* Profile name */
+.pc h2 {
+  letter-spacing: -.025em;
+  text-wrap: balance;
+}
+
+/* Username */
+.pc p {
+  letter-spacing: .01em;
+}
+
+/* Social chips become tiny card-like tokens */
+.pc-chip {
+  display: inline-flex !important;
+
+  height: 28px !important;
+  min-width: 28px !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  border: 1px solid currentColor !important;
+  border-radius: 999px !important;
+
+  padding: 0 8px !important;
+
+  opacity: .72;
+
+  background: rgba(255,255,255,.025) !important;
+
+  transition:
+    transform .25s ease,
+    opacity .25s ease,
+    background .25s ease !important;
+}
+
+.pc-chip:hover {
+  transform: translateY(-2px);
+  opacity: 1;
+  background: rgba(255,255,255,.08) !important;
+}
+
+/* QR sits naturally inside the card */
+.pc .pc-chip + .pc-chip {
+  margin-left: 1px;
+}
+
+/* QR white paper */
+.pc [class*="rounded-lg"][class*="bg-white"] {
+  border-radius: 7px !important;
+
+  box-shadow:
+    0 2px 5px rgba(0,0,0,.25),
+    0 0 0 1px rgba(0,0,0,.08) !important;
+}
+
+/* Physical lift */
+@media (hover: hover) and (pointer: fine) {
+  .pc:hover {
+    transform:
+      translateY(-8px)
+      rotate(.2deg) !important;
+
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.17) inset,
+      0 -1px 0 rgba(0,0,0,.25) inset,
+      0 5px 10px rgba(0,0,0,.28),
+      0 28px 52px rgba(0,0,0,.38),
+      0 45px 85px rgba(0,0,0,.18) !important;
+  }
+}
+
+/* Cards inside the home deck */
+.oneid-playing-card,
+.oneid-card-stack .pc {
+  will-change: transform;
+}
+
+/* Home explanatory cards */
+.oneid-playing-card {
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.16) inset,
+    0 -1px 0 rgba(0,0,0,.2) inset,
+    0 4px 8px rgba(0,0,0,.28),
+    0 24px 48px rgba(0,0,0,.34) !important;
+}
+
+/* Mobile card proportions stay physical */
+@media (max-width: 640px) {
+  .pc {
+    border-radius: 13px !important;
+    padding: 7px !important;
+  }
+
+  .pc::after {
+    inset: 5px;
+    border-radius: 9px;
+  }
+
+  .pc-corner.tl {
+    top: 13px !important;
+    left: 13px !important;
+  }
+
+  .pc-corner.br {
+    right: 13px !important;
+    bottom: 13px !important;
+  }
+
+  .pc-corner > span:first-child {
+    font-size: 21px !important;
+  }
+
+  .pc-corner > span:last-child {
+    font-size: 15px !important;
+  }
+}
+

@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+:root {
+  --oneid-bg: #0a0b0d;
+  --oneid-surface: #111317;
+  --oneid-card: #16181d;
+  --oneid-text: #f3efe8;
+  --oneid-muted: #8d9096;
+  --oneid-border: #24272e;
+  --oneid-accent: #e5566a;
+}
+
+@theme inline {
+  --color-bg: var(--oneid-bg);
+  --color-surface: var(--oneid-surface);
+  --color-card: var(--oneid-card);
+  --color-ink: var(--oneid-text);
+  --color-muted: var(--oneid-muted);
+  --color-line: var(--oneid-border);
+  --color-accent: var(--oneid-accent);
+  --font-sans: "Manrope", system-ui, sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+
+  --radius-card: 20px;
+  --radius-pill: 999px;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--oneid-bg);
+  color: var(--oneid-text);
+  font-family: "Manrope", system-ui, sans-serif;
+}
+
+::selection {
+  background: var(--oneid-accent);
+  color: var(--oneid-bg);
+}
+
+/* ---- Playing-card visual system (frontend only) ---- */
+.pc { position: relative; border-radius: 22px; padding: 12px; background: var(--pc-bg); color: var(--pc-fg);
+  box-shadow: 0 30px 60px -28px rgba(0,0,0,.85), 0 0 0 1px rgba(255,255,255,.06); }
+.pc-inner { position: relative; overflow: hidden; border: 1px solid color-mix(in srgb, var(--pc-fg) 28%, transparent);
+  border-radius: 14px; padding: 52px 20px; height: 100%; }
+.pc-corner { position: absolute; z-index: 5; display: flex; flex-direction: column; align-items: center; line-height: 1.05;
+  font-family: var(--font-serif); font-weight: 700; color: var(--pc-suit); }
+.pc-corner.tl { top: 10px; left: 12px; }
+.pc-corner.br { bottom: 10px; right: 12px; transform: rotate(180deg); }
+.pc-watermark { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 300px; line-height: 1; color: var(--pc-suit); opacity: .07; pointer-events: none; }
+.pc-divider { display: flex; justify-content: center; gap: 14px; margin: 22px 0 18px; font-size: 13px; color: var(--pc-suit); opacity: .85; }
+.pc-row { display: flex; align-items: center; justify-content: space-between; border-radius: 12px; padding: 11px 14px; font-size: 14px;
+  border: 1px solid color-mix(in srgb, var(--pc-fg) 18%, transparent);
+  background: color-mix(in srgb, var(--pc-fg) 7%, transparent); transition: border-color .15s; }
+.pc-row:hover { border-color: var(--pc-suit); }
+
+/* ---- v2 card refinements ---- */
+.pc-inner { padding: 46px 18px 50px; }
+.pc-ornament { display: flex; align-items: center; gap: 14px; width: 100%; margin: 22px 0 14px; color: var(--pc-fg); }
+.pc-ornament span { flex: 1; height: 1px; background: color-mix(in srgb, var(--pc-fg) 25%, transparent); }
+.pc-chip { display: inline-flex; height: 42px; width: 42px; align-items: center; justify-content: center; border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--pc-fg) 28%, transparent);
+  background: color-mix(in srgb, var(--pc-fg) 8%, transparent); transition: border-color .15s, color .15s; }
+.pc-chip:hover, .pc-chip:focus-visible { border-color: var(--pc-suit); color: var(--pc-suit); outline: none; }
